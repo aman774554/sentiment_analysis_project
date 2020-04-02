@@ -1,9 +1,23 @@
 # Sentiment Analysis(AI Project)
-->Preprocessing the data through SkLearn and nltk libraries .we first tokenize the data and then after tokenizing we stemize and lemmatize.
-->Parse the comments using Vader library . Classify each comment as positive, negative or neutral.
 Made By-
 1.Aman Chaturvedi
-2.Vishal Yadav
-3.Vidhu Singh
-4.Siddharth
+2.Vidhu Singh
+3.Vishal Yadav
+4.Siddharth Dagar
+
+This program help to detect the sentiment by analysing the sentence.
+It also include
+  # pie Chart-It shows total no. positive/negative/neutral sentences in percentage.
+  # Graph 2: Its x-axis represent sentence id and Y-axis shows Sentiment value.
+             
+# Anaconda(Spyder3)
+
+#The project needs some external library files.
+Numpy
+MatplotLib
+Pandas
+NLTK
+textblob
+SKLearn
+
 
