@@ -1,0 +1,7 @@
+example_id, text, aspect_term, term_location
+1,I am sad.,sad,6--8
+2,I am happy.,happy,6--10
+3,i am going to work,work,15--18
+4,everything about a mac is wonderful[comma] it takes a little used to learning and getting used to the new system[comma] but you will learn fast and its all worth it.,system,100--106
+5,Great laptop for school[comma] easy to use for beginners in the household.,use,33--36
+6,The battery is really long.,battery,4--11
