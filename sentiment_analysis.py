@@ -178,6 +178,8 @@ def aspectAnalysis(df, output=False):
         Y = df.iloc[:, 4].values
     return df, X, Y
 
+
+
 def gaussianNaiveBayes(X, Y):
 
     # Split in train and test
@@ -201,3 +203,198 @@ def gaussianNaiveBayes(X, Y):
 
     return [matrix, accuracy, fScore, precision, recall, report]
 
+
+
+def MultiLayerPerceptron(X, Y):
+
+    # Split in train and test
+    xTrain, xTest, yTrain, yTest = train_test_split(X, Y, test_size=0.25, random_state=0)
+
+    # Fit the classifier
+    classifier = MLPClassifier(alpha=10.0 ** -1, hidden_layer_sizes=(100,150), max_iter=100)
+    classifier.fit(xTrain, yTrain)
+
+    # Make predictions
+    yPred = classifier.predict(xTest)
+
+    # Confusion Matrix and accuracy
+    matrix = confusion_matrix(y_true=yTest, y_pred=yPred)
+    accuracy = accuracy_score(yPred, yTest)
+
+    # Precision, Recall and F-Score
+    fScore = f1_score(yTest, yPred, average="macro")
+    precision = precision_score(yTest, yPred, average="macro")
+    recall = recall_score(yTest, yPred, average="macro")
+    report = classification_report(yTest, yPred)
+    return [matrix, accuracy, fScore, precision, recall, report]
+
+
+def SVM(X, Y):
+
+    # Split in train and test
+    xTrain, xTest, yTrain, yTest = train_test_split(X, Y, test_size=0.25, random_state=0)
+
+    # # Fit the classifier
+    classifier =SVC(C=1, kernel='linear', decision_function_shape='ovo', gamma='auto')
+    classifier.fit(xTrain, yTrain)
+
+    # Make predictions
+    yPred = classifier.predict(xTest)
+
+    # Confusion Matrix and accuracy
+    matrix = confusion_matrix(y_true=yTest, y_pred=yPred)
+    accuracy = accuracy_score(yPred, yTest)
+
+    # Precision, Recall and F-Score
+    fScore = f1_score(yTest, yPred, average="macro")
+    precision = precision_score(yTest, yPred, average="macro")
+    recall = recall_score(yTest, yPred, average="macro")
+    report = classification_report(yTest, yPred)
+    return [matrix, accuracy, fScore, precision, recall, report]
+
+def trainBestClassifier(X, Y):
+
+
+    # {'C': 1, 'decision_function_shape': 'ovo', 'gamma': 'auto', 'kernel': 'linear'}
+    # Fit the classifier
+    classifier =SVC(C=1, kernel='linear', decision_function_shape='ovo', gamma='auto')
+    classifier.fit(X, Y)
+
+    return classifier
+
+  
+def printOutput(df, Y, outFile):
+    results = []
+  
+    print('\n******************************************************************')
+    print('****************************AI PROJECT****************************')
+    print('******************************************************************')
+
+        
+    for index, id in enumerate(df['example_id']):
+      
+        
+        print('------------------------------------------------------------')
+        # plotting the points  
+ 
+        if Y[index] == 1.0 : 
+            print("The sentence is Positive")
+        
+  
+        elif Y[index] == -1.0 : 
+            print("The sentence is Negative") 
+  
+        else : 
+            print("The sentence is Neutral")
+        print("sentence id-->sentiment value")
+        result = str(id) + '--->' + str(Y[index])
+        results.append(result)
+        
+        print(result)
+        print('------------------------------------------------------------')
+    FOX=[]
+    FOY=[]
+    for ind, idd in enumerate(df['example_id']):
+        forx=idd
+        fory=Y[ind]
+        FOX.append(forx)
+        FOY.append(fory) 
+
+
+    f = open(outFile, "w")
+    f.writelines(results)
+    f.close()
+    
+    p=FOY.count(1)
+    q=FOY.count(-1)
+    r=FOY.count(0)
+    print("------------------------------------------------------------")
+    print("Total Number Of Positive Sentencess",p)
+    print("Total Number Of Negative Sentences",q)
+    print("Total Number Of Neutral Sentences",r)
+    
+    # defining labels 
+    activities = ['Positive', 'Negative', 'Neutral'] 
+  
+# portion covered by each label 
+    slices = [p,q,r] 
+  
+# color for each label 
+    colors = ['r', 'y', 'g'] 
+  
+# plotting the pie chart 
+    plt.pie(slices, labels = activities, colors=colors,  
+        startangle=150, shadow = True, explode = (0.1, 0, 0), 
+        radius = 2.0, autopct = '%1.1f%%') 
+  
+# plotting legend 
+    plt.legend() 
+    
+# showing the plot 
+    plt.show() 
+    
+    plt.plot(FOX, FOY, color='green', linestyle='dashed', linewidth = 3, 
+         marker='o', markerfacecolor='blue', markersize=12) 
+  
+# setting x and y axis range 
+
+    
+    plt.ylim(-2,2) 
+    plt.xlim(0,10) 
+# naming the x axis 
+    plt.xlabel('sentence Id') 
+# naming the y axis 
+    plt.ylabel('Sentiment value') 
+  
+# giving a title to my graph 
+    plt.title('Sentiment Analysis') 
+    
+# function to show the plot 
+    
+    plt.show() 
+    
+       
+
+if __name__ == "__main__":
+    def append_list_as_row(file_name, list_of_elem):            
+    # Open file in append mode
+        with open(file_name, 'a+', newline='') as write_obj:
+        # Create a writer object from csv module
+            csv_writer = writer(write_obj)
+        # Add contents of list as last row in the csv file
+            csv_writer.writerow(list_of_elem)
+    
+    w=input("what to add data?:y/n")
+    if w=='y':
+        l=input("Enter sentence id: ")
+        m=input("Enter sentence: ")
+        n=input("Enter Aspect term from sentence: ")
+        o=input("Enter Aspect index i.e startingIndex--LastIndex: ")
+        row_contents = [l,m,n,o]
+# Appending a row to csv with missing entries
+        append_list_as_row('Data-1_test.csv', row_contents)
+    else:
+        pass
+    # Read two train datasets
+    df_comp_in = pd.read_csv('data-1_train.csv', sep='\s*,\s*')
+    df_comp_out = pd.read_csv('Data-1_test.csv', sep='\s*,\s*')
+    
+    # Your output file name
+    outFile = "output.txt"
+
+    df_comp_out['class'] = np.ones(len(df_comp_out))
+
+    df = pd.concat([df_comp_in, df_comp_out])
+    df = preprocessData(df)
+    
+    df, X, Y = aspectAnalysis(df)
+    X_train = X[0:len(df_comp_in)]
+    Y_train = Y[0:len(df_comp_in)]
+    X_test = X[len(df_comp_in):]
+    
+    
+    # Classifier
+    classfier_comp = trainBestClassifier(X_train, Y_train)
+    Y_test = classfier_comp.predict(X_test)
+    printOutput(df_comp_out, Y_test, outFile)
+  
