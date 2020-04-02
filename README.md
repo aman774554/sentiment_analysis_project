@@ -7,12 +7,12 @@ Made By-
 
 This program help to detect the sentiment by analysing the sentence.
 It also include
-  # pie Chart-It shows total no. positive/negative/neutral sentences in percentage.
-  # Graph 2: Its x-axis represent sentence id and Y-axis shows Sentiment value.
+    pie Chart-It shows total no. positive/negative/neutral sentences in percentage.
+    Graph 2: Its x-axis represent sentence id and Y-axis shows Sentiment value.
              
-# Anaconda(Spyder3)
+Anaconda(Spyder3)
 
-#The project needs some external library files.
+The project needs some external library files.
 Numpy
 MatplotLib
 Pandas
