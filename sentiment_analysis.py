@@ -2,21 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import nltk
-from sklearn.preprocessing import Imputer
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.neural_network import MLPRegressor, MLPClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score, classification_report
 import re
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sklearn.svm import SVC
 from textblob import TextBlob
-
-
-
+from csv import writer
 
 def returnDatasetInfo(df):
 
@@ -55,7 +47,6 @@ def preprocessData(df):
     df['aspect_term'] = df['aspect_term'].apply(lambda x: re.sub('\W+', ' ', x))
 
     # Remove the stop words
-    # nltk.download()
     stopWords = set(stopwords.words("english"))
     df['text'] = df['text'].apply(lambda x: ' '.join([word for word in word_tokenize(x) if word not in (stopWords)]))
 
@@ -68,7 +59,7 @@ def preprocessData(df):
         return tagged
 
     df['tagged_words'] = df['text'].apply(lambda row: tagWords(row))
-
+        
     return df
 
 def aspectAnalysis(df, output=False):
@@ -177,80 +168,6 @@ def aspectAnalysis(df, output=False):
     if not output:
         Y = df.iloc[:, 4].values
     return df, X, Y
-
-
-
-def gaussianNaiveBayes(X, Y):
-
-    # Split in train and test
-    xTrain, xTest, yTrain, yTest = train_test_split(X, Y, test_size=0.25, random_state=0)
-    classifier = GaussianNB()
-    classifier.fit(xTrain, yTrain)
-
-    # Make predictions
-    yPred = classifier.predict(xTest)
-
-    # Confusion Matrix and accuracy
-    matrix = confusion_matrix(y_true=yTest, y_pred=yPred)
-    accuracy = accuracy_score(yPred, yTest)
-
-    # Precision, Recall and F-Score
-    fScore = f1_score(yTest, yPred, average="macro")
-    precision = precision_score(yTest, yPred, average="macro")
-    recall = recall_score(yTest, yPred, average="macro")
-    report = classification_report(yTest, yPred)
-
-
-    return [matrix, accuracy, fScore, precision, recall, report]
-
-
-
-def MultiLayerPerceptron(X, Y):
-
-    # Split in train and test
-    xTrain, xTest, yTrain, yTest = train_test_split(X, Y, test_size=0.25, random_state=0)
-
-    # Fit the classifier
-    classifier = MLPClassifier(alpha=10.0 ** -1, hidden_layer_sizes=(100,150), max_iter=100)
-    classifier.fit(xTrain, yTrain)
-
-    # Make predictions
-    yPred = classifier.predict(xTest)
-
-    # Confusion Matrix and accuracy
-    matrix = confusion_matrix(y_true=yTest, y_pred=yPred)
-    accuracy = accuracy_score(yPred, yTest)
-
-    # Precision, Recall and F-Score
-    fScore = f1_score(yTest, yPred, average="macro")
-    precision = precision_score(yTest, yPred, average="macro")
-    recall = recall_score(yTest, yPred, average="macro")
-    report = classification_report(yTest, yPred)
-    return [matrix, accuracy, fScore, precision, recall, report]
-
-
-def SVM(X, Y):
-
-    # Split in train and test
-    xTrain, xTest, yTrain, yTest = train_test_split(X, Y, test_size=0.25, random_state=0)
-
-    # # Fit the classifier
-    classifier =SVC(C=1, kernel='linear', decision_function_shape='ovo', gamma='auto')
-    classifier.fit(xTrain, yTrain)
-
-    # Make predictions
-    yPred = classifier.predict(xTest)
-
-    # Confusion Matrix and accuracy
-    matrix = confusion_matrix(y_true=yTest, y_pred=yPred)
-    accuracy = accuracy_score(yPred, yTest)
-
-    # Precision, Recall and F-Score
-    fScore = f1_score(yTest, yPred, average="macro")
-    precision = precision_score(yTest, yPred, average="macro")
-    recall = recall_score(yTest, yPred, average="macro")
-    report = classification_report(yTest, yPred)
-    return [matrix, accuracy, fScore, precision, recall, report]
 
 def trainBestClassifier(X, Y):
 
@@ -397,4 +314,4 @@ if __name__ == "__main__":
     classfier_comp = trainBestClassifier(X_train, Y_train)
     Y_test = classfier_comp.predict(X_test)
     printOutput(df_comp_out, Y_test, outFile)
-  
+    
